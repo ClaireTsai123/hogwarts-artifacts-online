@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/artifacts")
+@RequestMapping("/artifacts")
 public class ArtifactController {
     private final ArtifactService artifactService;
     private final ArtifactToArtifactDtoConverter artifactConverter;
@@ -39,7 +39,7 @@ public class ArtifactController {
         Artifact artifact = artifactDtoConverter.convert(artifactDto);
         Artifact savedArtifact = artifactService.save(artifact);
         ArtifactDto savedArtifactDto = artifactConverter.convert(savedArtifact);
-        return new Result(true, StatusCode.SUCCESS, "Save Success", savedArtifactDto);
+        return new Result(true, StatusCode.SUCCESS, "Add Success", savedArtifactDto);
     }
 
     @PutMapping("/{artifactId}")

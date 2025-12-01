@@ -1,11 +1,11 @@
 package com.example.hogwartsartifactsonline.wizard.DTO;
 
-import com.example.hogwartsartifactsonline.artifact.Artifact;
+import jakarta.validation.constraints.NotEmpty;
 
-import java.util.List;
 
 public record WizardDto(
     Integer id,
+    @NotEmpty(message = "Name can not be empty")
     String name,
     Integer numberOfArtifacts
 ) {

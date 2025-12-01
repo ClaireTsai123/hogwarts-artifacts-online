@@ -1,5 +1,6 @@
 package com.example.hogwartsartifactsonline.artifact;
 
+import com.example.hogwartsartifactsonline.system.exception.ObjectNotFoundException;
 import com.example.hogwartsartifactsonline.utils.IdGenerator;
 import com.example.hogwartsartifactsonline.wizard.Wizard;
 import org.junit.jupiter.api.AfterEach;
@@ -85,8 +86,8 @@ class ArtifactServiceTest {
         Throwable throwable = catchThrowable(()-> artifactService.getById("1250808601744904192"));
         //Then
         assertThat(throwable).
-                isInstanceOf(ArtifactNotFoundException.class)
-                        .hasMessage("Could not found artifact with id: 1250808601744904192.");
+                isInstanceOf(ObjectNotFoundException.class)
+                        .hasMessage("Could not find artifact with id: 1250808601744904192.");
         verify(artifactRepository, times(1)).findById("1250808601744904192");
     }
 
@@ -156,7 +157,7 @@ class ArtifactServiceTest {
 
         given(artifactRepository.findById("1250808601744904192")).willReturn(Optional.empty());
         //When
-        assertThrows(ArtifactNotFoundException.class, () -> {
+        assertThrows(ObjectNotFoundException.class, () -> {
             artifactService.update("1250808601744904192", updated);
         });
         //Then
@@ -186,7 +187,7 @@ class ArtifactServiceTest {
         //Given
         given(artifactRepository.findById("1250808601744904192")).willReturn(Optional.empty());
         //When
-        assertThrows(ArtifactNotFoundException.class, () -> {
+        assertThrows(ObjectNotFoundException.class, () -> {
             artifactService.deleteById("1250808601744904192");
         });
         //Then
