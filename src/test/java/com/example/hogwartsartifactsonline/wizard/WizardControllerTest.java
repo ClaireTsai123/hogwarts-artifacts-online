@@ -217,7 +217,7 @@ public class WizardControllerTest {
     @Test
     void testAssignArtifactToWizardSuccess() throws Exception {
         // Given
-        Mockito.doNothing().when(wizardService).addArtifactToWizard(2, "1250808601744904192");
+        Mockito.doNothing().when(wizardService).assignArtifactToWizard(2, "1250808601744904192");
         // When and Then
         this.mockMvc.perform(put(this.base_url + "/wizards/2/artifacts/1250808601744904192")
                         .accept(MediaType.APPLICATION_JSON))
@@ -231,7 +231,35 @@ public class WizardControllerTest {
     void testAssignArtifactNotFound() throws Exception {
         // Given
         Mockito.doThrow(new ObjectNotFoundException("artifact", "1250808601744904192"))
-                .when(wizardService).addArtifactToWizard(2, "1250808601744904192");
+                .when(wizardService).assignArtifactToWizard(2, "1250808601744904192");
+        // When and Then
+        this.mockMvc.perform(put(this.base_url + "/wizards/2/artifacts/1250808601744904192")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find artifact with id: 1250808601744904192."))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    void testAssignArtifactNotFoundWizardId() throws Exception {
+        // Given
+        Mockito.doThrow(new ObjectNotFoundException("wizard", 2))
+                .when(wizardService).assignArtifactToWizard(2, "1250808601744904192");
+        // When and Then
+        this.mockMvc.perform(put(this.base_url + "/wizards/2/artifacts/1250808601744904192")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find wizard with id: 2."))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    void testAssignArtifactNotFoundArtifactId() throws Exception {
+        // Given
+        Mockito.doThrow(new ObjectNotFoundException("artifact", "1250808601744904192"))
+                .when(wizardService).assignArtifactToWizard(2, "1250808601744904192");
         // When and Then
         this.mockMvc.perform(put(this.base_url + "/wizards/2/artifacts/1250808601744904192")
                         .accept(MediaType.APPLICATION_JSON))
