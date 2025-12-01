@@ -3,9 +3,10 @@ package com.example.hogwartsartifactsonline.wizard.converter;
 import com.example.hogwartsartifactsonline.wizard.DTO.WizardDto;
 import com.example.hogwartsartifactsonline.wizard.Wizard;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
+@Component
 public class WizardDtoToWizardConverter implements Converter<WizardDto, Wizard> {
-
 
     @Override
     public Wizard convert(WizardDto source) {

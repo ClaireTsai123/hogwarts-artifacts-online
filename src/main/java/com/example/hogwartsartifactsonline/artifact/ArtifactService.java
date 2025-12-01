@@ -1,6 +1,6 @@
 package com.example.hogwartsartifactsonline.artifact;
 
-import com.example.hogwartsartifactsonline.artifact.DTO.ArtifactDto;
+import com.example.hogwartsartifactsonline.system.exception.ObjectNotFoundException;
 import com.example.hogwartsartifactsonline.utils.IdGenerator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class ArtifactService {
     private final IdGenerator idGenerator;
 
     public Artifact getById(String artifactId) {
-        return artifactRepository.findById(artifactId).orElseThrow(() -> new ArtifactNotFoundException(artifactId));
+        return artifactRepository.findById(artifactId).orElseThrow(() -> new ObjectNotFoundException("artifact",artifactId));
     }
 
     public List<Artifact> getAllArtifacts() {
@@ -34,11 +34,11 @@ public class ArtifactService {
             existing.setDescription(updated.getDescription());
             existing.setImgUrl(updated.getImgUrl());
             return artifactRepository.save(existing);
-        }).orElseThrow(() -> new ArtifactNotFoundException(id));
+        }).orElseThrow(() -> new ObjectNotFoundException("artifact",id));
     }
 
     public void deleteById(String artifactId) {
-      artifactRepository.findById(artifactId).orElseThrow(() -> new ArtifactNotFoundException(artifactId));
+      artifactRepository.findById(artifactId).orElseThrow(() -> new ObjectNotFoundException("artifact",artifactId));
         artifactRepository.deleteById(artifactId);
     }
 }
