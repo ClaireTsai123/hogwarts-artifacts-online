@@ -166,35 +166,63 @@ class WizardServiceTest {
     @Test
     void testAssignArtifactToWizardSuccess() {
         //Given
-        Wizard wizard = new Wizard();
-        wizard.setId(1);
-        wizard.setName("Albus Dumbledore");
         Artifact artifact = new Artifact();
         artifact.setId("1250808601744904196");
         artifact.setName("Resurrection Stone");
         artifact.setDescription("The Resurrection Stone allows the holder to bring back deceased loved ones, in a semi-physical form, and communicate with them.");
         artifact.setImgUrl("ImageUrl");
-        wizard.addArtifact(artifact);
+
+        Wizard w1 = new Wizard();
+        w1.setId(1);
+        w1.setName("Albus Dumbledore");
+        w1.addArtifact(artifact);
+
+        Wizard w2 = new Wizard();
+        w2.setId(2);
+        w2.setName("Harry Potter");
 
         given(artifactRepository.findById("1250808601744904196")).willReturn(Optional.of(artifact));
-        given(wizardRepository.findById(1)).willReturn(Optional.of(wizard));
-        given(wizardRepository.save(wizard)).willReturn(wizard);
+        given(wizardRepository.findById(2)).willReturn(Optional.of(w2));
         //when
-        wizardService.addArtifactToWizard(1, "1250808601744904196");
+        wizardService.assignArtifactToWizard(2, "1250808601744904196");
         //Then
-        verify(artifactRepository, times(1)).findById("1250808601744904196");
+        assertThat(artifact.getOwner().getId()).isEqualTo(2);
+        assertThat(w2.getArtifacts().contains(artifact));
 
     }
 
     @Test
-    void testAssignArtifactNotFound() {
+    void testAssignArtifactNotFoundWizardId() {
         //Given
-        given(artifactRepository.findById(Mockito.any(String.class))).willReturn(Optional.empty());
+        Artifact artifact = new Artifact();
+        artifact.setId("1250808601744904196");
+        artifact.setName("Resurrection Stone");
+        artifact.setDescription("The Resurrection Stone allows the holder to bring back deceased loved ones, in a semi-physical form, and communicate with them.");
+        artifact.setImgUrl("ImageUrl");
+
+        Wizard w1 = new Wizard();
+        w1.setId(1);
+        w1.setName("Albus Dumbledore");
+        w1.addArtifact(artifact);
+
+        given(artifactRepository.findById("1250808601744904196")).willReturn(Optional.of(artifact));
+        given(wizardRepository.findById(2)).willReturn(Optional.empty());
         //When
-        Throwable throwable = catchThrowable(() -> wizardService.addArtifactToWizard(1, "9999999999999999999"));
+        Throwable throwable = catchThrowable(() -> wizardService.assignArtifactToWizard(2, "1250808601744904196"));
         //Then
         assertThat(throwable).isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Could not find artifact with id: 9999999999999999999.");
-        verify(artifactRepository, times(1)).findById("9999999999999999999");
+                .hasMessage("Could not find wizard with id: 2.");
+        assertThat((artifact.getOwner().getId())).isEqualTo(1);
+    }
+
+    @Test
+    void testAssignArtifactNotFoundArtifactId() {
+        //Given
+        given(artifactRepository.findById("1250808601744904196")).willReturn(Optional.empty());
+        //When
+        Throwable throwable = catchThrowable(() -> wizardService.assignArtifactToWizard(2, "1250808601744904196"));
+        //Then
+        assertThat(throwable).isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find artifact with id: 1250808601744904196.");
     }
 }

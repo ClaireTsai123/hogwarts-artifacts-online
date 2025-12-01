@@ -1,5 +1,6 @@
 package com.example.hogwartsartifactsonline.wizard;
 
+import com.example.hogwartsartifactsonline.artifact.Artifact;
 import com.example.hogwartsartifactsonline.artifact.ArtifactRepository;
 import com.example.hogwartsartifactsonline.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
@@ -41,13 +42,16 @@ public class WizardService {
         wizardRepository.deleteById(wizardId);
     }
 
-    public void addArtifactToWizard(Integer wizardId, String artifactId) {
-        artifactRepository.findById(artifactId).map(
-                        artifact -> {
-                            Wizard wizard = findWizardById(wizardId);
-                            wizard.addArtifact(artifact);
-                            return wizardRepository.save(wizard);
-                        })
+    public void assignArtifactToWizard(Integer wizardId, String artifactId) {
+        Artifact artifactToBeAssigned = artifactRepository.findById(artifactId)
                 .orElseThrow(() -> new ObjectNotFoundException("artifact",artifactId));
+        Wizard wizard = wizardRepository.findById(wizardId)
+                .orElseThrow(() -> new ObjectNotFoundException("wizard",wizardId));
+
+        // we need to see if the artifact is already assigned to another wizard
+        if (artifactToBeAssigned.getOwner() != null) {
+            artifactToBeAssigned.getOwner().removeArtifact(artifactToBeAssigned);
+        }
+        wizard.addArtifact(artifactToBeAssigned);
     }
 }
