@@ -2,21 +2,22 @@ package com.example.hogwartsartifactsonline.system;
 
 import com.example.hogwartsartifactsonline.artifact.Artifact;
 import com.example.hogwartsartifactsonline.artifact.ArtifactRepository;
+import com.example.hogwartsartifactsonline.hogwartsuser.HogwartsUser;
+import com.example.hogwartsartifactsonline.hogwartsuser.UserRepository;
 import com.example.hogwartsartifactsonline.wizard.Wizard;
 import com.example.hogwartsartifactsonline.wizard.WizardRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class DBDataInitializer implements CommandLineRunner {
 
     private final WizardRepository wizardRepository;
     private final ArtifactRepository artifactRepository;
+    private final UserRepository userRepository;
 
-    public DBDataInitializer(WizardRepository wizardRepository, ArtifactRepository artifactRepository) {
-        this.wizardRepository = wizardRepository;
-        this.artifactRepository = artifactRepository;
-    }
     @Override
     public void run(String... args) throws Exception {
         Artifact a1 = new Artifact();
@@ -77,6 +78,27 @@ public class DBDataInitializer implements CommandLineRunner {
         wizardRepository.save(w3);
         artifactRepository.save(a6);
 
+        HogwartsUser user1 = new HogwartsUser();
+        user1.setUsername("John");
+        user1.setPassword("123456");
+        user1.setEnabled(true);
+        user1.setRoles("admin user");
+
+        HogwartsUser user2 = new HogwartsUser();
+        user2.setUsername("Jane");
+        user2.setPassword("abcdef");
+        user2.setRoles("user");
+        user2.setEnabled(true);
+
+        HogwartsUser user3 = new HogwartsUser();
+        user3.setUsername("Tom");
+        user3.setPassword("54321");
+        user3.setRoles("user");
+        user3.setEnabled(false);
+
+        userRepository.save(user1);
+        userRepository.save(user2);
+        userRepository.save(user3);
 
     }
 }
