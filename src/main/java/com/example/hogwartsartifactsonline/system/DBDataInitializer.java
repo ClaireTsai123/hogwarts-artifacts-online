@@ -4,6 +4,7 @@ import com.example.hogwartsartifactsonline.artifact.Artifact;
 import com.example.hogwartsartifactsonline.artifact.ArtifactRepository;
 import com.example.hogwartsartifactsonline.hogwartsuser.HogwartsUser;
 import com.example.hogwartsartifactsonline.hogwartsuser.UserRepository;
+import com.example.hogwartsartifactsonline.hogwartsuser.UserService;
 import com.example.hogwartsartifactsonline.wizard.Wizard;
 import com.example.hogwartsartifactsonline.wizard.WizardRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class DBDataInitializer implements CommandLineRunner {
 
     private final WizardRepository wizardRepository;
     private final ArtifactRepository artifactRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Override
     public void run(String... args) throws Exception {
@@ -96,9 +97,9 @@ public class DBDataInitializer implements CommandLineRunner {
         user3.setRoles("user");
         user3.setEnabled(false);
 
-        userRepository.save(user1);
-        userRepository.save(user2);
-        userRepository.save(user3);
+        userService.save(user1);
+        userService.save(user2);
+        userService.save(user3);
 
     }
 }
