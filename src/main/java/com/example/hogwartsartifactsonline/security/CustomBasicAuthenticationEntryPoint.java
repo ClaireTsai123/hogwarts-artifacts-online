@@ -1,0 +1,31 @@
+package com.example.hogwartsartifactsonline.security;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+
+import java.io.IOException;
+
+@Component
+public class CustomBasicAuthenticationEntryPoint implements AuthenticationEntryPoint {
+   /*
+   Here we inject DefaultHandlerExceptionResolver to delegate exception handling to Spring's exception handling mechanism.
+   This security exception can now be handled with controller advice with an exception handler
+    */
+    private final HandlerExceptionResolver handlerExceptionResolver;
+
+    public CustomBasicAuthenticationEntryPoint(@Qualifier("handlerExceptionResolver") HandlerExceptionResolver handlerExceptionResolver) {
+        this.handlerExceptionResolver = handlerExceptionResolver;
+    }
+
+    @Override
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+        response.addHeader("WWW-Authenticate", "Basic realm=\"Realm\"");
+        this.handlerExceptionResolver.resolveException(request, response, null, authException);
+    }
+}

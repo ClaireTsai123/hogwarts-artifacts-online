@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,9 @@ import static org.mockito.Mockito.*;
 class UserServiceTest {
     @Mock
     UserRepository userRepository;
+
+    @Mock
+    PasswordEncoder passwordEncoder;
 
     @InjectMocks
     UserService userService;
@@ -101,6 +105,7 @@ class UserServiceTest {
         newUser.setPassword("password");
         newUser.setRoles("user");
         newUser.setEnabled(true);
+        given(passwordEncoder.encode(newUser.getPassword())).willReturn("Encoded Password");
         given(userRepository.save(newUser)).willReturn(newUser);
         //when
         HogwartsUser savedUser = userService.save(newUser);

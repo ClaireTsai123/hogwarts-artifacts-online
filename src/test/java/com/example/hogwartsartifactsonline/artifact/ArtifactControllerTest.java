@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //@WebMvcTest(ArtifactController.class)
 //@Import(ExceptionHandlerAdvice.class)
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @TestPropertySource(properties = {
         "api.endpoint.base-url=/api/v1"
 })

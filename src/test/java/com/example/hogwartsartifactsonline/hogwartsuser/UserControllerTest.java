@@ -3,6 +3,7 @@ package com.example.hogwartsartifactsonline.hogwartsuser;
 import com.example.hogwartsartifactsonline.hogwartsuser.dto.UserDto;
 import com.example.hogwartsartifactsonline.system.StatusCode;
 import com.example.hogwartsartifactsonline.system.exception.ObjectNotFoundException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,13 +26,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @TestPropertySource(properties = {
         "api.endpoint.base-url=/api/v1"
 })
 class UserControllerTest {
     @Autowired
     MockMvc mockMvc;
+
 
     @MockitoBean
     UserService userService;
